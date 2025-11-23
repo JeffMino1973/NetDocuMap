@@ -1,0 +1,113 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\Jeffr> cd C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Delete the old file
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> Remove-Item setup-electron.cjs
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Create the new fixed version
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> @'
+>> #!/usr/bin/env node
+>>
+>> /**
+>>  * Setup script for Electron Windows build
+>>  * This script adds the necessary configuration to package.json
+>>  */
+>>
+>> const fs = require('fs');
+>> const path = require('path');
+>>
+>> console.log('╔═══════════════════════════════════════════════════════════╗');
+>> console.log('║   NetDoc - Electron Build Setup                          ║');
+>> console.log('╚═══════════════════════════════════════════════════════════╝\n');
+>>
+>> const packageJsonPath = path.join(__dirname, 'package.json');
+>> const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+>>
+>> // Add required scripts
+>> const requiredScripts = {
+>>   'build:client': 'vite build',
+>>   'build:all': 'npm run build:client',
+>>   'electron:dev': 'electron .',
+>>   'electron:build': 'node build-windows.js'
+>> };
+>>
+>> // Add main field
+>> const requiredFields = {
+>>   name: 'netdoc',
+>>   productName: 'NetDoc',
+>>   description: 'Professional network documentation system for managing school network infrastructure',
+>>   author: 'Network Documentation Team',
+>>   main: 'electron/main.js'
+>> };
+>>
+>> let modified = false;
+>>
+>> // Update fields
+>> for (const [key, value] of Object.entries(requiredFields)) {
+>>   if (packageJson[key] !== value) {
+>>     packageJson[key] = value;
+>>     modified = true;
+>>     console.log(`✅ Updated package.json field: ${key}`);
+>>   }
+>> }
+>>
+>> // Ensure scripts object exists
+>> if (!packageJson.scripts) {
+>>   packageJson.scripts = {};
+>>   modified = true;
+>>   console.log(`✅ Created scripts section`);
+>> }
+>>
+>> // Add scripts
+>> for (const [scriptName, scriptCommand] of Object.entries(requiredScripts)) {
+>>   if (!packageJson.scripts[scriptName]) {
+>>     packageJson.scripts[scriptName] = scriptCommand;
+>>     modified = true;
+>>     console.log(`✅ Added script: ${scriptName}`);
+>>   }
+>> }
+>>
+>> if (modified) {
+>>   // Write back to package.json
+>>   fs.writeFileSync(
+>>     packageJsonPath,
+>>     JSON.stringify(packageJson, null, 2) + '\n',
+>>     'utf8'
+>>   );
+>>
+>>   console.log('\n╔═══════════════════════════════════════════════════════════╗');
+>>   console.log('║   ✅ Setup Complete!                                      ║');
+>>   console.log('╚═══════════════════════════════════════════════════════════╝');
+>>   console.log('\npackage.json has been updated with Electron configuration.');
+>>   console.log('\nYou can now build the Windows installer:');
+>>   console.log('  npm run electron:build\n');
+>> } else {
+>>   console.log('\n✅ package.json already configured!');
+>>   console.log('\nYou can build the Windows installer:');
+>>   console.log('  npm run electron:build\n');
+>> }
+>> '@ | Out-File -FilePath "setup-electron.cjs" -Encoding UTF8
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Now run it
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> node setup-electron.cjs
+C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\setup-electron.cjs:1
+﻿#!/usr/bin/env node
+ ^
+
+SyntaxError: Invalid or unexpected token
+    at wrapSafe (node:internal/modules/cjs/loader:1662:18)
+    at Module._compile (node:internal/modules/cjs/loader:1704:20)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.17.0
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>

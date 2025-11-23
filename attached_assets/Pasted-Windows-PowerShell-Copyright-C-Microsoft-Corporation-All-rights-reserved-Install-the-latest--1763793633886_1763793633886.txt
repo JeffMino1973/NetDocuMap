@@ -1,0 +1,256 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\Jeffr> cd C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Delete the old file
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> Remove-Item setup-electron.cjs
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Create the new fixed version
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> @'
+>> #!/usr/bin/env node
+>>
+>> /**
+>>  * Setup script for Electron Windows build
+>>  * This script adds the necessary configuration to package.json
+>>  */
+>>
+>> const fs = require('fs');
+>> const path = require('path');
+>>
+>> console.log('╔═══════════════════════════════════════════════════════════╗');
+>> console.log('║   NetDoc - Electron Build Setup                          ║');
+>> console.log('╚═══════════════════════════════════════════════════════════╝\n');
+>>
+>> const packageJsonPath = path.join(__dirname, 'package.json');
+>> const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+>>
+>> // Add required scripts
+>> const requiredScripts = {
+>>   'build:client': 'vite build',
+>>   'build:all': 'npm run build:client',
+>>   'electron:dev': 'electron .',
+>>   'electron:build': 'node build-windows.js'
+>> };
+>>
+>> // Add main field
+>> const requiredFields = {
+>>   name: 'netdoc',
+>>   productName: 'NetDoc',
+>>   description: 'Professional network documentation system for managing school network infrastructure',
+>>   author: 'Network Documentation Team',
+>>   main: 'electron/main.js'
+>> };
+>>
+>> let modified = false;
+>>
+>> // Update fields
+>> for (const [key, value] of Object.entries(requiredFields)) {
+>>   if (packageJson[key] !== value) {
+>>     packageJson[key] = value;
+>>     modified = true;
+>>     console.log(`✅ Updated package.json field: ${key}`);
+>>   }
+>> }
+>>
+>> // Ensure scripts object exists
+>> if (!packageJson.scripts) {
+>>   packageJson.scripts = {};
+>>   modified = true;
+>>   console.log(`✅ Created scripts section`);
+>> }
+>>
+>> // Add scripts
+>> for (const [scriptName, scriptCommand] of Object.entries(requiredScripts)) {
+>>   if (!packageJson.scripts[scriptName]) {
+>>     packageJson.scripts[scriptName] = scriptCommand;
+>>     modified = true;
+>>     console.log(`✅ Added script: ${scriptName}`);
+>>   }
+>> }
+>>
+>> if (modified) {
+>>   // Write back to package.json
+>>   fs.writeFileSync(
+>>     packageJsonPath,
+>>     JSON.stringify(packageJson, null, 2) + '\n',
+>>     'utf8'
+>>   );
+>>
+>>   console.log('\n╔═══════════════════════════════════════════════════════════╗');
+>>   console.log('║   ✅ Setup Complete!                                      ║');
+>>   console.log('╚═══════════════════════════════════════════════════════════╝');
+>>   console.log('\npackage.json has been updated with Electron configuration.');
+>>   console.log('\nYou can now build the Windows installer:');
+>>   console.log('  npm run electron:build\n');
+>> } else {
+>>   console.log('\n✅ package.json already configured!');
+>>   console.log('\nYou can build the Windows installer:');
+>>   console.log('  npm run electron:build\n');
+>> }
+>> '@ | Out-File -FilePath "setup-electron.cjs" -Encoding UTF8
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Now run it
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> node setup-electron.cjs
+C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\setup-electron.cjs:1
+﻿#!/usr/bin/env node
+ ^
+
+SyntaxError: Invalid or unexpected token
+    at wrapSafe (node:internal/modules/cjs/loader:1662:18)
+    at Module._compile (node:internal/modules/cjs/loader:1704:20)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.17.0
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> cd C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Remove the broken file
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> Remove-Item setup-electron.cjs -ErrorAction SilentlyContinue
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Download directly from Replit (replace with your actual Replit URL)
+
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> # Or use this PowerShell-compatible version:
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> [System.IO.File]::WriteAllLines("$PWD\setup-electron.cjs", @'
+>> const fs = require('fs');
+>> const path = require('path');
+>>
+>> console.log('╔═══════════════════════════════════════════════════════════╗');
+>> console.log('║   NetDoc - Electron Build Setup                          ║');
+>> console.log('╚═══════════════════════════════════════════════════════════╝\n');
+>>
+>> const packageJsonPath = path.join(__dirname, 'package.json');
+>> const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+>>
+>> const requiredScripts = {
+>>   'build:client': 'vite build',
+>>   'build:all': 'npm run build:client',
+>>   'electron:dev': 'electron .',
+>>   'electron:build': 'node build-windows.js'
+>> };
+>>
+>> const requiredFields = {
+>>   name: 'netdoc',
+>>   productName: 'NetDoc',
+>>   description: 'Professional network documentation system for managing school network infrastructure',
+>>   author: 'Network Documentation Team',
+>>   main: 'electron/main.js'
+>> };
+>>
+>> let modified = false;
+>>
+>> for (const [key, value] of Object.entries(requiredFields)) {
+>>   if (packageJson[key] !== value) {
+>>     packageJson[key] = value;
+>>     modified = true;
+>>     console.log(`✅ Updated package.json field: ${key}`);
+>>   }
+>> }
+>>
+>> if (!packageJson.scripts) {
+>>   packageJson.scripts = {};
+>>   modified = true;
+>>   console.log(`✅ Created scripts section`);
+>> }
+>>
+>> for (const [scriptName, scriptCommand] of Object.entries(requiredScripts)) {
+>>   if (!packageJson.scripts[scriptName]) {
+>>     packageJson.scripts[scriptName] = scriptCommand;
+>>     modified = true;
+>>     console.log(`✅ Added script: ${scriptName}`);
+>>   }
+>> }
+>>
+>> if (modified) {
+>>   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n', 'utf8');
+>>   console.log('\n╔═══════════════════════════════════════════════════════════╗');
+>>   console.log('║   ✅ Setup Complete!                                      ║');
+>>   console.log('╚═══════════════════════════════════════════════════════════╝');
+>>   console.log('\npackage.json has been updated with Electron configuration.');
+>>   console.log('\nYou can now build the Windows installer:');
+>>   console.log('  npm run electron:build\n');
+>> } else {
+>>   console.log('\n✅ package.json already configured!');
+>>   console.log('\nYou can build the Windows installer:');
+>>   console.log('  npm run electron:build\n');
+>> }
+>> '@.Split("`n"), (New-Object System.Text.UTF8Encoding $false))
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> node setup-electron.cjs
+╔═══════════════════════════════════════════════════════════╗
+║   NetDoc - Electron Build Setup                          ║
+╚═══════════════════════════════════════════════════════════╝
+
+✅ Updated package.json field: name
+✅ Updated package.json field: productName
+✅ Updated package.json field: description
+✅ Updated package.json field: author
+✅ Updated package.json field: main
+✅ Created scripts section
+✅ Added script: build:client
+✅ Added script: build:all
+✅ Added script: electron:dev
+✅ Added script: electron:build
+
+╔═══════════════════════════════════════════════════════════╗
+║   ✅ Setup Complete!                                      ║
+╚═══════════════════════════════════════════════════════════╝
+
+package.json has been updated with Electron configuration.
+
+You can now build the Windows installer:
+  npm run electron:build
+
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap> npm run electron:build
+
+> electron:build
+> node build-windows.js
+
+╔═══════════════════════════════════════════════════════════╗
+║   NetDoc - Windows Installer Builder                     ║
+╚═══════════════════════════════════════════════════════════╝
+
+📦 Step 1/3: Building React frontend...
+
+▶ Running: npm run build:client
+
+> build:client
+> vite build
+
+✘ [ERROR] Top-level await is currently not supported with the "cjs" output format
+
+    vite.config.ts:13:10:
+      13 │           await import("@replit/vite-plugin-cartographer").then((m) =>
+         ╵           ~~~~~
+
+✘ [ERROR] Top-level await is currently not supported with the "cjs" output format
+
+    vite.config.ts:16:10:
+      16 │           await import("@replit/vite-plugin-dev-banner").then((m) =>
+         ╵           ~~~~~
+
+failed to load config from C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\vite.config.ts
+error during build:
+Error: Build failed with 2 errors:
+vite.config.ts:13:10: ERROR: Top-level await is currently not supported with the "cjs" output format
+vite.config.ts:16:10: ERROR: Top-level await is currently not supported with the "cjs" output format
+    at failureErrorWithLog (C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\node_modules\esbuild\lib\main.js:926:25
+    at runOnEndCallbacks (C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\node_modules\esbuild\lib\main.js:1307:45)
+    at buildResponseToResult (C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\node_modules\esbuild\lib\main.js:924:7)
+    at C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\node_modules\esbuild\lib\main.js:951:16
+    at responseCallbacks.<computed> (C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+
+❌ Build failed: Command failed with exit code 1
+PS C:\Users\Jeffr\Downloads\NetDocuMap\NetDocuMap>

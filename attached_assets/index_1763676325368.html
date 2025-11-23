@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SEP Portal v12 – Enhanced Dashboard (Patched)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide@latest/font/lucide.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'sans': ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root{
+      --sep-blue:#1e3a8a;
+      --sep-green:#059669;
+      --sep-orange:#f97316;
+      --sep-light:#f3f4f6;
+      --sep-white:#ffffff;
+      --sep-navy-dark:#001a44;
+    }
+  </style>
+</head>
+<body class="bg-[var(--sep-light)] font-sans">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 flex items-center">
+            <i class="fas fa-graduation-cap text-[var(--sep-blue)] text-2xl mr-3"></i>
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">SEP Portal v12</h1>
+              <p class="text-xs text-gray-500">Special Education Management</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="relative p-2 text-gray-400 hover:text-gray-500" aria-label="Notifications">
+            <i class="fas fa-bell text-xl"></i>
+            <span class="sr-only">Notifications</span>
+            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400"></span>
+          </button>
+          <div class="flex items-center space-x-2">
+            <img class="h-8 w-8 rounded-full" src="https://via.placeholder.com/32" alt="User avatar">
+            <div class="text-sm">
+              <p class="font-medium text-gray-900">Admin User</p>
+              <p class="text-gray-500">Administrator</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Welcome Banner -->
+    <div class="bg-gradient-to-r from-[var(--sep-blue)] to-[var(--sep-navy-dark)] rounded-lg shadow-lg p-8 mb-8 text-white">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold mb-2" id="greeting">Good morning!</h1>
+          <p class="opacity-90">Welcome to your comprehensive resource hub for Special Education Programs</p>
+        </div>
+        <div class="text-right">
+          <div class="text-4xl font-bold" id="current-time">04:02</div>
+          <div class="opacity-90" id="current-date">Thursday, 16 October 2025</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow-sm border">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-blue-100">
+            <i class="fas fa-users text-[var(--sep-blue)] text-xl"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Students</p>
+            <p class="text-2xl font-bold text-gray-900" id="total-students">156</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow-sm border">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-emerald-100">
+            <i class="fas fa-user-check text-[var(--sep-green)] text-xl"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Present Today</p>
+            <p class="text-2xl font-bold text-gray-900" id="present-today">142</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow-sm border">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-orange-100">
+            <i class="fas fa-user-times text-[var(--sep-orange)] text-xl"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Absent Today</p>
+            <p class="text-2xl font-bold text-gray-900" id="absent-today">14</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Briefing -->
+    <div class="bg-white rounded-lg p-6 mb-8 border-l-4" style="border-color:var(--sep-blue)">
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Daily Briefing</h3>
+      <div class="space-y-2 text-sm text-gray-700">
+        <p><i class="fas fa-exclamation-circle mr-2 text-[var(--sep-orange)]"></i>3 students have IEP reviews scheduled this week</p>
+        <p><i class="fas fa-calendar-check mr-2 text-[var(--sep-green)]"></i>2 IEP meetings scheduled for today</p>
+        <p><i class="fas fa-sticky-note mr-2 text-[var(--sep-blue)]"></i>5 progress notes need to be completed</p>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <a href="{{ url_for('students.student_roster') }}" class="bg-[var(--sep-blue)] text-white p-6 rounded-lg hover:opacity-90 transition-colors">
+        <i class="fas fa-users text-3xl mb-3"></i>
+        <h3 class="font-semibold">Students</h3>
+        <p class="text-sm opacity-90">Manage Student Profiles</p>
+      </a>
+          <a href="{{ url_for('lms_index') }}" class="module-card bg-green-600 rounded-xl p-6 text-white hover:opacity-90 transition-colors">
+                   <div class="mb-4">
+                       <i class="fas fa-graduation-cap text-4xl"></i>
+                   </div>
+                   <h3 class="text-lg font-semibold mb-1">Learning Management System</h3>
+                   <p class="text-sm text-green-100">Course content & student learning</p>
+               </a>
+      <a href="{{ url_for('incidents_index') }}" class="bg-[var(--sep-orange)] text-white p-6 rounded-lg hover:opacity-90 transition-colors">
+        <i class="fas fa-exclamation-triangle text-3xl mb-3"></i>
+        <h3 class="font-semibold">Incidents</h3>
+        <p class="text-sm opacity-90">Behavior & Safety Reports</p>
+      </a>
+       <a href="{{ url_for('room_bookings_index') }}" class="module-card bg-pink-600 rounded-xl p-6 text-white hover:opacity-90 transition-colors">
+                <div class="mb-4">
+                    <i class="fas fa-door-open text-4xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-1">Room Bookings</h3>
+                <p class="text-sm text-pink-100">Schedule rooms and resources</p>
+            </a>
+    </div>
+
+<!-- Management Tools -->
+    <div class="bg-white rounded-lg shadow-sm border mb-8">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900">Management Tools</h2>
+      </div>
+      <div class="p-6">
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200">
+          <nav class="-mb-px flex space-x-8 text-sm">
+            <button class="tab-btn py-2 px-1 border-b-2 border-[var(--sep-blue)] text-[var(--sep-blue)] font-medium" data-tab="essentials">Essentials</button>
+            <button class="tab-btn py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium" data-tab="students">Students</button>
+            <button class="tab-btn py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium" data-tab="attendance">Attendance</button>
+            <button class="tab-btn py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium" data-tab="assessment">Assessment</button>
+            <button class="tab-btn py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium" data-tab="planning">Planning</button>
+            <button class="tab-btn py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium" data-tab="admin">Admin</button>
+          </nav>
+        </div>
+
+        <!-- TAB 1: ESSENTIALS - Main Hubs -->
+        <div id="essentials-tab" class="tab-content mt-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Row 1: Core Management Hubs -->
+            <a href="{{ url_for('students.student_roster') }}" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-users text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Students Hub</h3>
+                  <p class="text-sm text-gray-600">Manage student profiles</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="{{ url_for('lms_index') }}" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-graduation-cap text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">LMS</h3>
+                  <p class="text-sm text-gray-600">Course content & learning</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="{{ url_for('incidents_index') }}" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-orange-100 rounded-lg">
+                  <i class="fas fa-exclamation-triangle text-orange-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Incidents Hub</h3>
+                  <p class="text-sm text-gray-600">Behavior & safety reports</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="{{ url_for('room_bookings_index') }}" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-pink-100 rounded-lg">
+                  <i class="fas fa-door-open text-pink-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Room Bookings</h3>
+                  <p class="text-sm text-gray-600">Schedule rooms & resources</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Row 2: Scheduling & Communication -->
+            <a href="/timetable" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-calendar-alt text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Timetable Hub</h3>
+                  <p class="text-sm text-gray-600">Class scheduling</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/meetings" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-calendar-check text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Meetings Hub</h3>
+                  <p class="text-sm text-gray-600">Schedule meetings</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/communications" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-comments text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Communications</h3>
+                  <p class="text-sm text-gray-600">Internal communications</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/staff_directory" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-indigo-100 rounded-lg">
+                  <i class="fas fa-address-book text-indigo-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Staff Directory</h3>
+                  <p class="text-sm text-gray-600">Staff contacts</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Row 3: Planning & Administration -->
+            <a href="/curriculum" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-book text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Curriculum Hub</h3>
+                  <p class="text-sm text-gray-600">Curriculum planning</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/smart_goals" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-red-100 rounded-lg">
+                  <i class="fas fa-bullseye text-red-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">SMART Goals</h3>
+                  <p class="text-sm text-gray-600">Set and track goals</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-chart-bar text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Assessment Hub</h3>
+                  <p class="text-sm text-gray-600">Student assessments</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/school_admin" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-900 bg-opacity-10 rounded-lg">
+                  <i class="fas fa-building text-blue-900 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">School Admin</h3>
+                  <p class="text-sm text-gray-600">School administration</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- TAB 2: STUDENTS -->
+        <div id="students-tab" class="tab-content mt-6 hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Student Information -->
+            <a href="{{ url_for('students.student_roster') }}" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-user text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Student Profiles</h3>
+                  <p class="text-sm text-gray-600">Manage student information</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/students/add" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-user-plus text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Add Student</h3>
+                  <p class="text-sm text-gray-600">Enroll new students</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/students/search" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-search text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Student Search</h3>
+                  <p class="text-sm text-gray-600">Search student database</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Student Plans -->
+            <a href="/student_plans" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-clipboard-list text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Student Plans Hub</h3>
+                  <p class="text-sm text-gray-600">Access all student plans</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/student_plans/iep" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-file-medical text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">IEP Management</h3>
+                  <p class="text-sm text-gray-600">Individual Education Plans</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/student_plans/behavior" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-orange-100 rounded-lg">
+                  <i class="fas fa-hand-paper text-orange-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Behavior Plans</h3>
+                  <p class="text-sm text-gray-600">Behavior support plans</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Health & Safety -->
+            <a href="/student_plans/health" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-red-100 rounded-lg">
+                  <i class="fas fa-heartbeat text-red-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Health Care Plans</h3>
+                  <p class="text-sm text-gray-600">Student health management</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/student_plans/risk" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-orange-100 rounded-lg">
+                  <i class="fas fa-shield-alt text-orange-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Risk Management</h3>
+                  <p class="text-sm text-gray-600">WHS risk management</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/student_plans/safety" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-life-ring text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Safety Plans</h3>
+                  <p class="text-sm text-gray-600">Student safety plans</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Support & Transition -->
+            <a href="/student_plans/support_map" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-project-diagram text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Support Maps</h3>
+                  <p class="text-sm text-gray-600">Student support networks</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/student_plans/transition" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-exchange-alt text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Transition Plans</h3>
+                  <p class="text-sm text-gray-600">Student transitions</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/student_plans/tracker" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Student Tracker</h3>
+                  <p class="text-sm text-gray-600">Track student progress</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- TAB 3: ATTENDANCE -->
+        <div id="attendance-tab" class="tab-content mt-6 hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Daily Attendance -->
+            <a href="/attendance/mark" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-clipboard-check text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Mark Roll</h3>
+                  <p class="text-sm text-gray-600">Mark daily attendance</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/attendance/daily" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-calendar-day text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Daily Attendance</h3>
+                  <p class="text-sm text-gray-600">View daily attendance</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/attendance/class" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-users text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Class Attendance</h3>
+                  <p class="text-sm text-gray-600">Class-by-class attendance</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Reports & Tracking -->
+            <a href="/attendance/reports" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-chart-pie text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Attendance Reports</h3>
+                  <p class="text-sm text-gray-600">Attendance analytics</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/attendance/absences" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-red-100 rounded-lg">
+                  <i class="fas fa-user-times text-red-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Absence Tracking</h3>
+                  <p class="text-sm text-gray-600">Track student absences</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/attendance/late" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-orange-100 rounded-lg">
+                  <i class="fas fa-clock text-orange-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Late Arrivals</h3>
+                  <p class="text-sm text-gray-600">Late arrival tracking</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Analytics & Export -->
+            <a href="/attendance/patterns" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Attendance Patterns</h3>
+                  <p class="text-sm text-gray-600">Identify patterns</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/attendance/alerts" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-red-100 rounded-lg">
+                  <i class="fas fa-bell text-red-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Attendance Alerts</h3>
+                  <p class="text-sm text-gray-600">Attendance notifications</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/attendance/export" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-download text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Export Attendance</h3>
+                  <p class="text-sm text-gray-600">Export attendance data</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- TAB 4: ASSESSMENT -->
+        <div id="assessment-tab" class="tab-content mt-6 hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Assessment Tools -->
+            <a href="/assessment" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-clipboard-list text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Assessment Hub</h3>
+                  <p class="text-sm text-gray-600">Main assessment hub</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment/create" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-plus-circle text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Create Assessment</h3>
+                  <p class="text-sm text-gray-600">Create new assessments</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment/log" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-list-alt text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Assessment Log</h3>
+                  <p class="text-sm text-gray-600">View assessment history</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Grading & Reports -->
+            <a href="/assessment/gradebook" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-book-open text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Grade Book</h3>
+                  <p class="text-sm text-gray-600">Student grade management</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment/semester_reports" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Semester Reports</h3>
+                  <p class="text-sm text-gray-600">Generate semester reports</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment/report_cards" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-id-card text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Report Cards</h3>
+                  <p class="text-sm text-gray-600">Student report cards</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Analytics -->
+            <a href="/assessment/progress" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Student Progress</h3>
+                  <p class="text-sm text-gray-600">Track student progress</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment/analytics" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-chart-bar text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Assessment Analytics</h3>
+                  <p class="text-sm text-gray-600">Assessment data analysis</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment/rubrics" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-table text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Rubrics</h3>
+                  <p class="text-sm text-gray-600">Assessment rubrics</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Standards -->
+            <a href="/assessment/standards" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-graduation-cap text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Learning Standards</h3>
+                  <p class="text-sm text-gray-600">Curriculum standards</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment/benchmarks" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-orange-100 rounded-lg">
+                  <i class="fas fa-balance-scale text-orange-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Benchmarking</h3>
+                  <p class="text-sm text-gray-600">Student benchmarking</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/assessment/dashboard" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-tachometer-alt text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Reports Dashboard</h3>
+                  <p class="text-sm text-gray-600">Reporting overview</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- TAB 5: PLANNING -->
+        <div id="planning-tab" class="tab-content mt-6 hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Curriculum Planning -->
+            <a href="/curriculum" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-book text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Curriculum Hub</h3>
+                  <p class="text-sm text-gray-600">Curriculum management</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/curriculum/lesson_planner" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-pen-fancy text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Lesson Planner</h3>
+                  <p class="text-sm text-gray-600">Create lesson plans</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/curriculum/unit_planner" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-folder-open text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Unit Planner</h3>
+                  <p class="text-sm text-gray-600">Plan units of work</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Scope & Sequence -->
+            <a href="/curriculum/scope_k6" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-list-ol text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">K-6 Scope & Sequence</h3>
+                  <p class="text-sm text-gray-600">K-6 curriculum scope</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/curriculum/scope_712" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-orange-100 rounded-lg">
+                  <i class="fas fa-list-ol text-orange-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">7-12 Scope & Sequence</h3>
+                  <p class="text-sm text-gray-600">7-12 curriculum scope</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/curriculum/life_skills" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-hands-helping text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Life Skills Scope</h3>
+                  <p class="text-sm text-gray-600">Life skills curriculum</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Timetabling -->
+            <a href="/timetable" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-calendar-alt text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Timetable Hub</h3>
+                  <p class="text-sm text-gray-600">Timetable management</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/timetable/class" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-table text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Class Timetables</h3>
+                  <p class="text-sm text-gray-600">Class schedules</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/timetable/calendar" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-calendar text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Timetable Calendar</h3>
+                  <p class="text-sm text-gray-600">Calendar view</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Scheduling Tools -->
+            <a href="/timetable/optimizer" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-magic text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Timetable Optimizer</h3>
+                  <p class="text-sm text-gray-600">Optimize schedules</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="{{ url_for('room_bookings_index') }}" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-door-open text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Room Scheduling</h3>
+                  <p class="text-sm text-gray-600">Room allocation</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/meetings" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Meeting Scheduler</h3>
+                  <p class="text-sm text-gray-600">Schedule meetings</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- TAB 6: ADMIN -->
+        <div id="admin-tab" class="tab-content mt-6 hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- System Administration -->
+            <a href="/school_admin" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-building text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">School Admin Hub</h3>
+                  <p class="text-sm text-gray-600">School administration</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/staff/manage" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-users-cog text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Staff Management</h3>
+                  <p class="text-sm text-gray-600">Manage staff records</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/staff_directory" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-address-book text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Staff Directory</h3>
+                  <p class="text-sm text-gray-600">Staff contacts</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Incident Management -->
+            <a href="{{ url_for('incidents_index') }}" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-orange-100 rounded-lg">
+                  <i class="fas fa-exclamation-triangle text-orange-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Incident Reports</h3>
+                  <p class="text-sm text-gray-600">View incident reports</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/incidents/report" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-red-100 rounded-lg">
+                  <i class="fas fa-file-alt text-red-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Report Incident</h3>
+                  <p class="text-sm text-gray-600">Create incident report</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/incidents/analytics" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-chart-pie text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Incident Analytics</h3>
+                  <p class="text-sm text-gray-600">Incident data analysis</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Resources & Facilities -->
+            <a href="/resources" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg">
+                  <i class="fas fa-box text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Resources Hub</h3>
+                  <p class="text-sm text-gray-600">Resource management</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/resources/admin" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-tools text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Resource Admin</h3>
+                  <p class="text-sm text-gray-600">Resource administration</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="{{ url_for('room_bookings_index') }}" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                  <i class="fas fa-door-open text-purple-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Room Bookings</h3>
+                  <p class="text-sm text-gray-600">Facility bookings</p>
+                </div>
+              </div>
+            </a>
+
+            <!-- Communication & Goals -->
+            <a href="/communications" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                  <i class="fas fa-comments text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Communications</h3>
+                  <p class="text-sm text-gray-600">Internal comms</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/smart_goals" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-red-100 rounded-lg">
+                  <i class="fas fa-bullseye text-red-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">SMART Goals</h3>
+                  <p class="text-sm text-gray-600">Goal management</p>
+                </div>
+              </div>
+            </a>
+
+            <a href="/compliance" class="tool-card bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-center">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-check-circle text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-gray-900">Compliance Hub</h3>
+                  <p class="text-sm text-gray-600">Compliance tracking</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    // Tab switching functionality
+    document.querySelectorAll('.tab-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.classList.remove('border-[var(--sep-blue)]', 'text-[var(--sep-blue)]');
+          btn.classList.add('border-transparent', 'text-gray-500');
+        });
+        
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.add('hidden');
+        });
+        
+        // Add active class to clicked button
+        button.classList.remove('border-transparent', 'text-gray-500');
+        button.classList.add('border-[var(--sep-blue)]', 'text-[var(--sep-blue)]');
+        
+        // Show corresponding tab content
+        const tabName = button.getAttribute('data-tab');
+        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+      });
+    });
+    </script>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>    <!-- Sidebar Widgets -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Calendar Widget -->
+      <div class="bg-white rounded-lg shadow-sm border">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+          <h3 class="text-lg font-medium text-gray-900">Calendar</h3>
+          <div class="flex space-x-2">
+            <button id="prev-month" class="text-gray-400 hover:text-gray-600" aria-label="Previous month"><i class="fas fa-chevron-left"></i></button>
+            <button id="next-month" class="text-gray-400 hover:text-gray-600" aria-label="Next month"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+        <div class="p-4">
+          <div class="text-center mb-4">
+            <h4 id="calendar-title" class="font-semibold text-gray-900">Month YYYY</h4>
+          </div>
+          <div class="grid grid-cols-7 gap-1 text-center text-sm">
+            <div class="font-semibold text-gray-500">S</div>
+            <div class="font-semibold text-gray-500">M</div>
+            <div class="font-semibold text-gray-500">T</div>
+            <div class="font-semibold text-gray-500">W</div>
+            <div class="font-semibold text-gray-500">T</div>
+            <div class="font-semibold text-gray-500">F</div>
+            <div class="font-semibold text-gray-500">S</div>
+          </div>
+          <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center text-sm mt-1"></div>
+        </div>
+      </div>
+
+      <!-- Upcoming Meetings -->
+      <div class="bg-white rounded-lg shadow-sm border">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">Upcoming Meetings</h3>
+        </div>
+        <div id="upcoming-meetings-container" class="p-4 space-y-3">
+          <div class="flex items-center p-3 bg-blue-50 rounded-lg">
+            <div class="w-10 h-10 rounded-full bg-[var(--sep-blue)] flex items-center justify-center">
+              <i class="fas fa-file-alt text-white text-sm"></i>
+            </div>
+            <div class="ml-3 flex-1">
+              <p class="font-medium text-gray-900">IEP Review - Emma Wilson</p>
+              <p class="text-sm text-gray-600">Today, 14:00</p>
+            </div>
+          </div>
+          <div class="flex items-center p-3 bg-emerald-50 rounded-lg">
+            <div class="w-10 h-10 rounded-full bg-[var(--sep-green)] flex items-center justify-center">
+              <i class="fas fa-users text-white text-sm"></i>
+            </div>
+            <div class="ml-3 flex-1">
+              <p class="font-medium text-gray-900">Staff Meeting</p>
+              <p class="text-sm text-gray-600">Tomorrow, 09:00</p>
+            </div>
+          </div>
+          <div class="flex items-center p-3 bg-orange-50 rounded-lg">
+            <div class="w-10 h-10 rounded-full bg-[var(--sep-orange)] flex items-center justify-center">
+              <i class="fas fa-exclamation-triangle text-white text-sm"></i>
+            </div>
+            <div class="ml-3 flex-1">
+              <p class="font-medium text-gray-900">Incident Review</p>
+              <p class="text-sm text-gray-600">Friday, 15:00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Schedule -->
+      <div class="bg-white rounded-lg shadow-sm border">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">Today's Schedule</h3>
+        </div>
+        <div id="todays-schedule-container" class="p-4 space-y-2">
+          <div class="flex items-center justify-between p-2">
+            <div>
+              <p class="font-medium text-gray-900">Mathematics</p>
+              <p class="text-sm text-gray-600">Year 6</p>
+            </div>
+            <span class="text-sm text-gray-500">09:00</span>
+          </div>
+          <div class="flex items-center justify-between p-2">
+            <div>
+              <p class="font-medium text-gray-900">English</p>
+              <p class="text-sm text-gray-600">Year 7</p>
+            </div>
+            <span class="text-sm text-gray-500">10:30</span>
+          </div>
+          <div class="flex items-center justify-between p-2">
+            <div>
+              <p class="font-medium text-gray-900">Playground Duty</p>
+              <p class="text-sm text-gray-600">Recess</p>
+            </div>
+            <span class="text-sm text-gray-500">11:30</span>
+          </div>
+          <div class="flex items-center justify-between p-2">
+            <div>
+              <p class="font-medium text-gray-900">IEP Review</p>
+              <p class="text-sm text-gray-600">Emma Wilson</p>
+            </div>
+            <span class="text-sm text-gray-500">14:00</span>
+          </div>
+          <div class="flex items-center justify-between p-2">
+            <div>
+              <p class="font-medium text-gray-900">Lunch Supervision</p>
+              <p class="text-sm text-gray-600">Cafeteria</p>
+            </div>
+            <span class="text-sm text-gray-500">12:00</span>
+          </div>
+          <div class="flex items-center justify-between p-2">
+            <div>
+              <p class="font-medium text-gray-900">Professional Development</p>
+              <p class="text-sm text-gray-600">Training</p>
+            </div>
+            <span class="text-sm text-gray-500">15:30</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <p class="text-center text-gray-500 text-sm">
+        SEP Portal v12 • <a href="/api/stats" class="text-[var(--sep-blue)] hover:underline">API</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Time + Greeting (Australia/Sydney)
+    function updateClock() {
+      const fmtTime = new Intl.DateTimeFormat('en-AU', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Australia/Sydney' });
+      const fmtDate = new Intl.DateTimeFormat('en-AU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Australia/Sydney' });
+      const now = new Date();
+      document.getElementById('current-time').textContent = fmtTime.format(now);
+      document.getElementById('current-date').textContent = fmtDate.format(now);
+
+      const hour = Number(new Intl.DateTimeFormat('en-AU', { hour: '2-digit', hour12: false, timeZone: 'Australia/Sydney' }).format(now));
+      let greeting = 'Good morning!';
+      if (hour >= 12 && hour < 17) greeting = 'Good afternoon!';
+      else if (hour >= 17) greeting = 'Good evening!';
+      document.getElementById('greeting').textContent = greeting;
+    }
+
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('border-[var(--sep-blue)]', 'text-[var(--sep-blue)]');
+          b.classList.add('border-transparent', 'text-gray-500');
+        });
+        this.classList.add('border-[var(--sep-blue)]', 'text-[var(--sep-blue)]');
+        this.classList.remove('border-transparent', 'text-gray-500');
+        const category = this.dataset.tab;
+        const tools = document.querySelectorAll('.tool-card');
+        tools.forEach(tool => {
+          if (category === 'all' || tool.dataset.category === category) tool.classList.remove('hidden');
+          else tool.classList.add('hidden');
+        });
+      });
+    });
+
+    // Load stats
+    async function loadStats() {
+      try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        document.getElementById('total-students').textContent = data.total_students;
+        document.getElementById('present-today').textContent = data.today_attendance;
+        document.getElementById('absent-today').textContent = data.total_students - data.today_attendance;
+      } catch (e) {
+        console.error('Error loading stats:', e);
+      }
+    }
+
+    // Dynamic Calendar (simple, local time assumed)
+    const titleEl = document.getElementById('calendar-title');
+    const gridEl = document.getElementById('calendar-grid');
+    let viewYear, viewMonth; // month is 0-based
+
+    function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+    function endOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+
+    function renderCalendar(y, m){
+      const first = new Date(y, m, 1);
+      const last = endOfMonth(first);
+      titleEl.textContent = first.toLocaleString('en-AU', { month: 'long', year: 'numeric' });
+
+      // Clear grid
+      gridEl.innerHTML = '';
+
+      const startDay = first.getDay(); // 0=Sun
+      const totalDays = last.getDate();
+      // leading blanks
+      for(let i=0;i<startDay;i++){
+        const cell = document.createElement('div');
+        cell.className = 'p-2 text-gray-300';
+        cell.textContent = '';
+        gridEl.appendChild(cell);
+      }
+      // days
+      const today = new Date();
+      for(let d=1; d<=totalDays; d++){
+        const cell = document.createElement('div');
+        cell.className = 'p-2 rounded-full';
+        cell.textContent = d;
+        // highlight today
+        if (d === today.getDate() && m === today.getMonth() && y === today.getFullYear()){
+          cell.classList.add('bg-[var(--sep-blue)]','text-white','font-semibold');
+        } else {
+          cell.classList.add('hover:bg-gray-100','cursor-default');
+        }
+        gridEl.appendChild(cell);
+      }
+    }
+
+    document.getElementById('prev-month').addEventListener('click', () => {
+      if (viewMonth === 0){ viewMonth = 11; viewYear--; } else { viewMonth--; }
+      renderCalendar(viewYear, viewMonth);
+    });
+    document.getElementById('next-month').addEventListener('click', () => {
+      if (viewMonth === 11){ viewMonth = 0; viewYear++; } else { viewMonth++; }
+      renderCalendar(viewYear, viewMonth);
+    });
+
+    // Init
+    const now = new Date();
+    viewYear = now.getFullYear();
+    viewMonth = now.getMonth();
+
+      // Load Upcoming Meetings
+      async function loadMeetings() {
+        try {
+          const response = await fetch("/api/meetings");
+          const meetings = await response.json();
+          
+          const meetingsContainer = document.querySelector("#upcoming-meetings-container");
+          if (!meetingsContainer) return;
+          
+          meetingsContainer.innerHTML = "";
+          
+          meetings.forEach(meeting => {
+            const colorMap = {
+              blue: { bg: "bg-blue-50", icon: "bg-[var(--sep-blue)]" },
+              green: { bg: "bg-emerald-50", icon: "bg-[var(--sep-green)]" },
+              orange: { bg: "bg-orange-50", icon: "bg-[var(--sep-orange)]" }
+            };
+            
+            const colors = colorMap[meeting.color] || colorMap.blue;
+            
+            const meetingEl = document.createElement("div");
+            meetingEl.className = `flex items-center p-3 ${colors.bg} rounded-lg`;
+            meetingEl.innerHTML = `
+              <div class="w-10 h-10 rounded-full ${colors.icon} flex items-center justify-center">
+                <i class="fas ${meeting.icon} text-white text-sm"></i>
+              </div>
+              <div class="ml-3 flex-1">
+                <p class="font-medium text-gray-900">${meeting.title}</p>
+                <p class="text-sm text-gray-600">${meeting.display_time}</p>
+              </div>
+            `;
+            
+            meetingsContainer.appendChild(meetingEl);
+          });
+        } catch (error) {
+          console.error("Error loading meetings:", error);
+        }
+      }
+
+      // Load Today's Schedule
+      async function loadSchedule() {
+        try {
+          const response = await fetch("/api/schedule");
+          const schedule = await response.json();
+          
+          const scheduleContainer = document.querySelector("#todays-schedule-container");
+          if (!scheduleContainer) return;
+          
+          scheduleContainer.innerHTML = "";
+          
+          schedule.forEach(item => {
+            const itemEl = document.createElement("div");
+            itemEl.className = "flex items-center justify-between p-2 hover:bg-gray-50 rounded transition-colors";
+            itemEl.innerHTML = `
+              <div>
+                <p class="font-medium text-gray-900">${item.title}</p>
+                <p class="text-sm text-gray-600">${item.subtitle}</p>
+              </div>
+              <span class="text-sm text-gray-500 font-medium">${item.time}</span>
+            `;
+            
+            scheduleContainer.appendChild(itemEl);
+          });
+        } catch (error) {
+          console.error("Error loading schedule:", error);
+        }
+      }
+
+    renderCalendar(viewYear, viewMonth);
+    updateClock();
+    loadStats();
+    setInterval(updateClock, 60000);
+    setInterval(loadStats, 30000);
+      loadMeetings();
+      loadSchedule();
+      setInterval(loadMeetings, 300000); // Refresh every 5 minutes
+      setInterval(loadSchedule, 300000); // Refresh every 5 minutes
+  </script>
+</body>
+</html>
